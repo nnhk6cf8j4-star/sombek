@@ -313,6 +313,22 @@ button:not(.knob):active{transition:transform .1s}
 .fo{font-size:22px;font-weight:700;color:var(--acc);animation:pop .45s both}
 .stage{display:flex;gap:12px;align-items:flex-start}.stage .sn{width:34px;height:34px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
 [data-skin=dark] .stage .sn{color:#0b1b2e}
+
+/* ===== ro'yxatdan o'tish va PIN ===== */
+.ovl{position:absolute;inset:0;z-index:85;background:linear-gradient(180deg,#e7e6ff 0%,#f4f4fd 60%,#fff 100%);color:#1d2140;font-family:"Plus Jakarta Sans",Roboto,system-ui,sans-serif;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 34px) 24px calc(env(safe-area-inset-bottom,0px) + 22px);overflow-y:auto;transition:transform .45s cubic-bezier(.6,0,.2,1),opacity .35s}
+.ovl.out{transform:translateY(-100%);opacity:0}
+.ovl h2{font-size:28px;font-weight:800;letter-spacing:-.6px;margin-top:18px;animation:up .45s .05s both}.ovl>p{font-size:14px;color:#5a5f7d;margin-top:8px;line-height:1.5;animation:up .45s .1s both}
+.ovl label{display:block;font-size:13px;font-weight:600;color:#4a4f6a;margin:18px 0 7px}
+.ovl input{width:100%;padding:15px 16px;border-radius:16px;border:1.5px solid #e1e3f0;background:#fff;font-size:17px;color:#1d2140;outline:0;transition:.2s;font-family:inherit}
+.ovl input:focus{border-color:#5b5ef4;box-shadow:0 0 0 4px #5b5ef422}
+.ovl .ph{display:flex;align-items:center;gap:0;border:1.5px solid #e1e3f0;border-radius:16px;background:#fff;overflow:hidden}.ovl .ph:focus-within{border-color:#5b5ef4;box-shadow:0 0 0 4px #5b5ef422}
+.ovl .ph span{padding:0 4px 0 16px;font-size:17px;font-weight:600}.ovl .ph input{border:0;box-shadow:none!important;padding-left:6px}
+.ovl .err{color:#e5485c;font-size:12.5px;margin-top:6px;min-height:16px}
+.ovl .go2{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px;border-radius:30px;background:#1d2347;color:#fff;font-size:16px;font-weight:600}
+.ovl .sm{font-size:12px;color:#8b90a7;text-align:center;margin-top:12px;line-height:1.5}
+.pinb{display:flex;justify-content:center;gap:16px;margin:34px 0 28px}.pinb i{width:15px;height:15px;border-radius:50%;border:2px solid #5b5ef4;transition:.15s}.pinb i.on{background:#5b5ef4;transform:scale(1.1)}
+.pinb.shake{animation:shk .35s}
+.pkeys{display:grid;grid-template-columns:repeat(3,72px);gap:16px 28px;justify-content:center}.pkeys button{width:72px;height:72px;border-radius:50%;background:#fff;font-size:26px;font-weight:600;color:#1d2140;box-shadow:0 4px 14px rgba(60,64,140,.08);transition:transform .1s}.pkeys button:active{transform:scale(.9);background:#ecebff}.pkeys .nb{background:transparent;box-shadow:none;font-size:14px}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -596,7 +612,7 @@ function vStat(){
   <div style="text-align:left">${arr.map(([c,v])=>`<button class="cr" onclick="selCat=${c.id}===selCat?null:${c.id};renderTab()" style="opacity:${selCat==null||selCat===c.id?1:.45}">${tileH(c.icon,c.color)}<div><div class="l"><span>${esc(c.name)}</span><span>${fmt(v)} ${S.cur}</span></div><div class="pb"><i style="width:${v/arr[0][1]*100}%;background:${c.color}"></i></div></div><div class="p" style="width:38px">${Math.round(v/tt*100)} %</div></button>`).join('')}</div></div>`}
 /* ===== Ko'proq ===== */
 function vMore(){const m=(i,t,f)=>`<button class="menu" onclick="${f}">${ic(i)}${t}</button>`;
-  return`<button class="pban" onclick="go(vPlan)"><div><b>Moliya rejasi</b><small>Taqsimot · Orzular · Yostiqcha · Erkinlik</small></div><span>${ic('right')}</span></button><div style="margin:0 -14px;padding:0 14px">${m('cal',"Rejalashtirilgan to'lovlar",'go(vSched)')}${m('budget','Byudjetlar','go(vBud)')}<div style="height:10px"></div>${m('palette',"Dizayn: Qorong'i / Yorug'",'skinSheet()')}${m('gear','Sozlamalar','go(vSet)')}${m('db',"Ma'lumotlar",'go(vData)')}</div><div class="mut" style="text-align:center;font-size:12px;margin-top:30px">Sombek 1.0 · shaxsiy xarajat hisobi</div>`}
+  return`<button class="pban" onclick="go(vPlan)"><div><b>Moliya rejasi</b><small>Taqsimot · Orzular · Yostiqcha · Erkinlik</small></div><span>${ic('right')}</span></button><div style="margin:0 -14px;padding:0 14px">${m('cal',"Rejalashtirilgan to'lovlar",'go(vSched)')}${m('budget','Byudjetlar','go(vBud)')}<div style="height:10px"></div>${m('user','Profil: ism, telefon, PIN','profEdit()')}${m('palette',"Dizayn: Qorong'i / Yorug'",'skinSheet()')}${m('gear','Sozlamalar','go(vSet)')}${m('db',"Ma'lumotlar",'go(vData)')}</div><div class="mut" style="text-align:center;font-size:12px;margin-top:30px">Sombek 1.0 · shaxsiy xarajat hisobi</div>`}
 function vSet(){return pgh('Sozlamalar')+`<div class="pb2"><button class="fld" onclick="skinSheet()"><div class="lb" style="margin-bottom:6px">Dizayn</div><div class="lk">${LT()?"Yorug' (rasm uslubi)":"Qorong'i (video uslubi)"}</div></button><button class="fld" onclick="curPage()"><div class="lb" style="margin-bottom:6px">Valyuta</div><div class="lk">${S.cur}</div></button><button class="fld rw" onclick="S.hide=!S.hide;save();R()" style="padding:14px"><span>Balansni yashirish</span><i class="tg ${S.hide?'on':''}"></i></button><div class="mut" style="font-size:12.5px;margin:6px 4px">Raqamlar vergul bilan ajratiladi (1,000,000).</div></div>`}
 function vBud(){const sp=catTotalsAll();return pgh('Byudjetlar')+`<div class="pb2"><div class="mut" style="font-size:13px;margin:0 4px 12px">${MONTHS[M.m]} ${M.y} bo'yicha oylik limitlar</div>${S.cats.filter(c=>c.type==='out'&&!c.arch).map(c=>{const l=S.budgets[c.id]||0,v=sp[c.id]||0,p=l?Math.min(100,v/l*100):0;return`<button class="card" style="animation:none" onclick="budSheet(${c.id})">${tileH(c.icon,c.color)}<div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px"><span class="n">${esc(c.name)}</span><span style="font-size:13px" class="${l&&v>l?'red':'mut'}">${l?fmt(l):'limit yo\'q'}</span></div><div style="font-size:14px;margin-top:2px;color:${c.color}">${fmt(v)} ${S.cur}</div>${l?`<div class="pb"><i style="width:${p}%;background:${v>l?'var(--red)':c.color}"></i></div>`:''}</div></button>`}).join('')}</div>`}
 function catTotalsAll(){const o={};S.tx.filter(t=>inM(t)&&t.type==='out').forEach(t=>o[t.cat]=(o[t.cat]||0)+t.amt);return o}
@@ -697,10 +713,10 @@ function streak(){const st=new Set(S.tx.map(t=>ds(t.d)));let n=0;const c=new Dat
 function nameSheet(){sheet(`<h4>Ismingiz</h4><div class="fld" style="padding:10px"><input type="text" id="nmi" value="${esc(S.name||uname())}"></div><button class="btn bp" onclick="S.name=document.getElementById('nmi').value.trim();save();closeSheet();R()">Saqlash</button>`)}
 function vProf(){const u=uname(),un=tg&&tg.initDataUnsafe&&tg.initDataUnsafe.user&&tg.initDataUnsafe.user.username,sv=liveAccs().filter(a=>a.type==='sav').length;
   const m=(i,t,f,r)=>`<button onclick="${f}">${ic(i)}<span>${t}</span><span class="rt">${r||''}${ic('cr')}</span></button>`;
-  return`<div class="phd"><div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="av">${esc((u[0]||'S').toUpperCase())}</span><button class="ib" style="color:#fff" onclick="go(vSet)">${ic('gear')}</button></div><h2>${esc(u)}</h2><small>${un?'@'+esc(un):'Sombek · shaxsiy hisob'}</small>
+  return`<div class="phd"><div style="display:flex;justify-content:space-between;align-items:flex-start"><span class="av">${esc((u[0]||'S').toUpperCase())}</span><button class="ib" style="color:#fff" onclick="go(vSet)">${ic('gear')}</button></div><h2>${esc(u)}</h2><small>${S.user&&S.user.phone?phShow(S.user.phone):un?'@'+esc(un):'Sombek · shaxsiy hisob'}</small>
   <div class="pst"><div><b>${S.tx.length}</b><small>Operatsiyalar</small></div><div><b>${sv}</b><small>Maqsadlar</small></div><div><b>${streak()}</b><small>Kun ketma-ket</small></div></div></div>
   <div class="pm">${m('trend','Moliya rejasi','go(vPlan)')}${m('nwallet','Hisoblar',"setTab('accs')",liveAccs().length)}${m('ncat','Kategoriyalar',"setTab('cats')")}${m('piggy','Maqsadlarim',"setTab('goals')")}${m('cal',"Rejalashtirilgan to'lovlar",'go(vSched)',S.sched.length?`<span class="nb">${S.sched.length}</span>`:'')}${m('budget','Byudjetlar','go(vBud)')}</div>
-  <div class="pm">${m('palette',"Ko'rinish",'skinSheet()',"Yorug'")}${m('user',"Ismni o'zgartirish",'nameSheet()')}${m('db',"Ma'lumotlar",'go(vData)')}${m('gear','Sozlamalar','go(vSet)')}</div>
+  <div class="pm">${m('palette',"Ko'rinish",'skinSheet()',"Yorug'")}${m('user','Profil: ism, telefon, PIN','profEdit()',S.user&&S.user.pin?'PIN ✓':'')}${m('db',"Ma'lumotlar",'go(vData)')}${m('gear','Sozlamalar','go(vSet)')}</div>
   <button class="lo" onclick="setSkin('dark')">${ic('palette')}Qorong'i dizaynga o'tish</button>`}
 /* ===== MOLIYA REJASI (kitob bo'yicha) ===== */
 const MON0=['Oziq-ovqat',"Yo'lkira",'Ishxonada tushlik',"Uydagi kommunal to'lovlar",'Tozalash vositalari',"Xususiy bog'cha, maktab",'Kurslar, sport','Oylik soliqlar','Dori-darmon','Uy xizmatchisi','Sartarosh / salon','Ehson','Ota-onaga','Choyxona','Mashina yuvishga','Bolaga kasha, pampers',"Bog'da aylanish, restoranlar","Farzandlarga yo'lkira",'Shtraf','Qarzlar (nasiya)','Uy hayvonlari uchun oziq-ovqat','Internet','Telefon aloqasi'];
@@ -821,11 +837,39 @@ const ILL=`<svg viewBox="0 0 360 220" preserveAspectRatio="xMidYMid meet"><defs>
 <g class="flt"><rect x="246" y="156" width="28" height="28" rx="9" fill="#5b5ef4"/><path d="M253 170l5 5 9-10" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
 <g class="flt2"><ellipse cx="88" cy="196" rx="20" ry="7" fill="#f0a91e"/><rect x="68" y="182" width="40" height="14" fill="#ffc857"/><ellipse cx="88" cy="182" rx="20" ry="7" fill="#ffd77a"/><text x="88" y="186" text-anchor="middle" font-size="9" font-weight="800" fill="#b07400">$</text></g></svg>`;
 function welcome(){if(S.welcomed)return;const w=document.createElement('div');w.id='wel';w.innerHTML=`<div class="wt"><div class="lg4">${ic('apps')}</div><h1>Pulingiz,<br><em>nazoratda</em><br>bir joyda</h1><p>Kirim-chiqimni yozing, maqsad qo'ying va pul qayerga ketayotganini ko'ring.</p></div><div class="ill">${ILL}</div><div class="wb"><button class="go" onclick="welDone('light')">Boshlash ${ic('right')}</button><button class="alt" onclick="welDone('dark')">Qorong'i dizayn kerakmi? <b>Shu bilan boshlash</b></button></div>`;$('#app').appendChild(w)}
-function welDone(s){S.welcomed=1;setSkin(s);const w=$('#wel');w.classList.add('out');setTimeout(()=>w.remove(),520)}
+function welDone(s){S.welcomed=1;setSkin(s);if(!S.user)regShow();const w=$('#wel');w.classList.add('out');setTimeout(()=>w.remove(),520)}
+/* ===== RO'YXATDAN O'TISH, PIN ===== */
+const phF=v=>{const d=v.replace(/\D/g,'').slice(0,9);return[d.slice(0,2),d.slice(2,5),d.slice(5,7),d.slice(7,9)].filter(Boolean).join(' ')};
+const phShow=p=>p?'+998 '+phF(p):'';
+function regShow(edit){const u=S.user||{},o=document.createElement('div');o.className='ovl';o.id='reg';
+  o.innerHTML=`${edit?`<button style="align-self:flex-start;margin:-10px 0 0 -8px;color:#1d2140" class="ib" onclick="regClose()">${ic('back')}</button>`:`<div class="lg4" style="width:50px;height:50px;border-radius:15px;background:#fff;display:grid;place-items:center;box-shadow:0 8px 20px rgba(91,94,244,.18);color:#5b5ef4">${ic('user')}</div>`}
+  <h2>${edit?'Profil ma\'lumotlari':"Ro'yxatdan o'tish"}</h2><p>${edit?"Ism, telefon va PIN-kodni o'zgartirishingiz mumkin.":"Ismingiz va telefon raqamingizni kiriting. Ma'lumotlar faqat shu telefonda saqlanadi."}</p>
+  <label>Ismingiz</label><input id="rn" value="${esc(u.name||S.name||'')}" placeholder="Masalan: Avaz" autocomplete="name">
+  <label>Telefon raqam</label><div class="ph"><span>+998</span><input id="rp" inputmode="tel" value="${phF(u.phone||'')}" placeholder="90 123 45 67" oninput="this.value=phF(this.value)" autocomplete="tel-national"></div>
+  <label>PIN-kod (ixtiyoriy, 4 raqam)</label><input id="rk" inputmode="numeric" maxlength="4" value="" placeholder="${u.pin?'••••  (o\'zgartirmaslik uchun bo\'sh qoldiring)':'Dasturga kirishda so\'raladi'}" oninput="this.value=this.value.replace(/\\D/g,'').slice(0,4)" type="password">
+  ${edit&&u.pin?`<button style="margin-top:10px;color:#e5485c;font-size:13px;font-weight:600;align-self:flex-start" onclick="S.user.pin='';save();toast('PIN-kod olib tashlandi')">PIN-kodni olib tashlash</button>`:''}
+  <div class="err" id="rerr"></div><div style="flex:1;min-height:24px"></div>
+  <button class="go2" onclick="regSave(${edit?1:0})">${edit?'Saqlash':"Davom etish"} ${ic('right')}</button><div class="sm">Hech qayerga yuborilmaydi · SMS kerak emas</div>`;
+  $('#app').appendChild(o);setTimeout(()=>{const e=$('#rn');e&&!e.value&&e.focus()},500)}
+function regSave(edit){const n=$('#rn').value.trim(),p=$('#rp').value.replace(/\D/g,''),k=$('#rk').value,er=$('#rerr');
+  if(n.length<2){er.textContent='Ismingizni kiriting';return}if(p.length!==9){er.textContent="Telefon raqam 9 ta raqam bo'lsin: 90 123 45 67";return}if(k&&k.length!==4){er.textContent="PIN-kod 4 ta raqam bo'lsin";return}
+  const old=S.user||{};S.user={name:n,phone:p,pin:k||old.pin||'',at:old.at||Date.now()};S.name=n;save();hap('medium');regClose();R();toast(edit?'Saqlandi':`Xush kelibsiz, ${n}!`)}
+function regClose(){const o=$('#reg');if(!o)return;o.classList.add('out');setTimeout(()=>o.remove(),480)}
+function profEdit(){regShow(1)}
+let PINv='';
+function lockShow(){if(!S.user||!S.user.pin||$('#lock'))return;PINv='';const o=document.createElement('div');o.className='ovl';o.id='lock';o.style.alignItems='center';o.style.textAlign='center';
+  o.innerHTML=`<div class="av" style="width:72px;height:72px;font-size:28px;margin-top:10px">${esc((S.user.name[0]||'S').toUpperCase())}</div><h2 style="font-size:24px">${esc(S.user.name)}</h2><p>PIN-kodni kiriting</p><div class="pinb" id="pinb">${'<i></i>'.repeat(4)}</div>
+  <div class="pkeys">${['1','2','3','4','5','6','7','8','9','x','0','<'].map(k=>k==='x'?`<button class="nb" onclick="pinForgot()">Unutdim</button>`:`<button class="${k==='<'?'nb':''}" onclick="pinKey('${k}')">${k==='<'?'⌫':k}</button>`).join('')}</div>`;
+  $('#app').appendChild(o)}
+let PINb=0;
+function pinKey(k){if(PINb)return;if(k==='<')PINv=PINv.slice(0,-1);else if(PINv.length<4)PINv+=k;hap();const b=$('#pinb');[...b.children].forEach((e,i)=>e.classList.toggle('on',i<PINv.length));
+  if(PINv.length===4){if(PINv===S.user.pin){setTimeout(()=>{const o=$('#lock');o.classList.add('out');setTimeout(()=>o.remove(),480)},120)}else{b.classList.remove('shake');void b.offsetWidth;b.classList.add('shake');try{tg&&tg.HapticFeedback.notificationOccurred('error')}catch(e){}PINb=1;setTimeout(()=>{PINb=0;PINv='';[...b.children].forEach(e=>e.classList.remove('on'))},380)}}}
+function pinForgot(){const o=$('#lock');o.innerHTML=`<h2 style="font-size:22px">PIN-kodni tiklash</h2><p>Ro'yxatdan o'tgan telefon raqamingizni kiriting</p><div class="ph" style="margin-top:20px;width:100%"><span>+998</span><input id="fp" inputmode="tel" placeholder="90 123 45 67" oninput="this.value=phF(this.value)"></div><div class="err" id="ferr"></div><div style="flex:1"></div><button class="go2" onclick="pinReset()">Tiklash</button><button class="sm" style="display:block;width:100%" onclick="$('#lock').remove();lockShow()">Orqaga</button>`}
+function pinReset(){if($('#fp').value.replace(/\D/g,'')===S.user.phone){S.user.pin='';save();const o=$('#lock');o.classList.add('out');setTimeout(()=>o.remove(),480);toast("PIN olib tashlandi, Profilda yangisini qo'ying")}else $('#ferr').textContent="Raqam mos kelmadi"}
 /* ===== boot ===== */
 try{if('serviceWorker' in navigator&&location.protocol==='https:')navigator.serviceWorker.register('sw.js')}catch(e){}
 $('#app').addEventListener('scroll',e=>{if(e.target.scrollTop)e.target.scrollTop=0});
-applySkin();if(LT()&&tab==='accs')tab='home';runSched();R();welcome();
+applySkin();if(LT()&&tab==='accs')tab='home';runSched();R();welcome();if(S.welcomed&&!S.user)regShow();else lockShow();
 </script>
 </body>
 </html>
